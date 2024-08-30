@@ -1,74 +1,53 @@
 import RestaurantCard from "./RestaurantCard";
-import { useState, useEffect } from "react";
 import Shimmer from "./Shimmer";
 import { Link } from "react-router-dom";
-
+import useRestaurantList from "../utils/useRestaurantList";
+import useOnlineStatus from "../utils/useOnlineStatus";
 const Body = () => {
-  const [resLists, setUseResList] = useState([]);
-  const [searchText, setSearchText] = useState("");
-  const [filteredListRes, setFilteredListRes] = useState([]);
+  const {
+    resList,
+    filteredListRes,
+    searchText,
+    setSearchText,
+    filterBySearch,
+    filterByRating,
+  } = useRestaurantList();
 
-  useEffect(() => {
-    fetchData();
-  }, []);
+  const onlineStatus = useOnlineStatus();
+  if (onlineStatus === false)
+    return <h1>Oops!! seems Like we Lost the connection!! </h1>;
 
-  const fetchData = async () => {
-    const data = await fetch(
-      "https://www.swiggy.com/dapi/restaurants/list/v5?lat=19.9615398&lng=79.2961468&is-seo-homepage-enabled=true&page_type=DESKTOP_WEB_LISTING"
-    );
-
-    const json = await data.json();
-
-    console.log(json);
-
-    setUseResList(
-      json?.data?.cards[4]?.card?.card?.gridElements?.infoWithStyle
-        ?.restaurants || []
-    );
-    setFilteredListRes(
-      json?.data?.cards[4]?.card?.card?.gridElements?.infoWithStyle
-        ?.restaurants || []
-    );
-  };
-
-  return resLists.length === 0 ? (
+  return resList.length === 0 ? (
     <Shimmer />
   ) : (
     <div className="body">
-      <div className="filter">
-        <div className="search">
+      <div className="filter flex items-center justify-center space-x-4 my-4">
+        <div className="search flex items-center space-x-2">
           <input
             type="text"
-            className="search-box"
+            className="border py-1 px-1 border-gray-500 shadow-md rounded-full"
             value={searchText}
             onChange={(e) => {
               setSearchText(e.target.value);
             }}
           />
+          <div className="search m-4 p-4">
+            <button
+              className="bg-orange-400 hover:bg-orange-300 text-white font-bold py-2 px-3 rounded-full"
+              onClick={filterBySearch}
+            >
+              Search
+            </button>
+          </div>
           <button
-            onClick={() => {
-              const filteredRes = resLists.filter((res) =>
-                res.info.name.toLowerCase().includes(searchText.toLowerCase())
-              );
-              setFilteredListRes(filteredRes);
-            }}
+            className=" bg-blue-500 hover:bg-blue-700 text-white font-bold py-3 px-2 rounded-full"
+            onClick={filterByRating}
           >
-            Search
+            Top Rated Restaurants
           </button>
         </div>
-        <button
-          className="filter-btn"
-          onClick={() => {
-            const filteredList = resLists.filter(
-              (res) => res.info.avgRating > 4
-            );
-            setUseResList(filteredList);
-          }}
-        >
-          Top Rated Restaurants
-        </button>
       </div>
-      <div className="restraunt-container">
+      <div className="restraunt-container grid grid-cols-1 sm:grid-cols-2 md-grid-cols-3 lg:grid-cols-4 gap-4">
         {filteredListRes.map((res) => (
           <Link to={"/restaurants/" + res.info.id} key={res.info.id}>
             <RestaurantCard resList={res} />
