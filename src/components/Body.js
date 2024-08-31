@@ -3,7 +3,10 @@ import Shimmer from "./Shimmer";
 import { Link } from "react-router-dom";
 import useRestaurantList from "../utils/useRestaurantList";
 import useOnlineStatus from "../utils/useOnlineStatus";
+import { useContext } from "react";
+import UserContext from "../utils/UserContext";
 const Body = () => {
+  const { loggedInUser, setUserInfo } = useContext(UserContext);
   const {
     resList,
     filteredListRes,
@@ -12,7 +15,6 @@ const Body = () => {
     filterBySearch,
     filterByRating,
   } = useRestaurantList();
-
   const onlineStatus = useOnlineStatus();
   if (onlineStatus === false)
     return <h1>Oops!! seems Like we Lost the connection!! </h1>;
@@ -45,6 +47,13 @@ const Body = () => {
           >
             Top Rated Restaurants
           </button>
+          <label>User Name: </label>
+          <input
+            type="text"
+            className="border border-black p-2"
+            value={loggedInUser}
+            onChange={(e) => setUserInfo(e.target.value)}
+          />
         </div>
       </div>
       <div className="restraunt-container grid grid-cols-1 sm:grid-cols-2 md-grid-cols-3 lg:grid-cols-4 gap-4">

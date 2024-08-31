@@ -1,15 +1,18 @@
 import { LogoURL } from "../utils/constants";
-import { useState, useEffect } from "react";
+import { useState, useContext } from "react";
 import { Link } from "react-router-dom";
 import useOnlineStatus from "../utils/useOnlineStatus";
+import UserContext from "../utils/UserContext";
+import { useSelector } from "react-redux";
 
 const Header = () => {
   const [login, isLogin] = useState(true);
   const onlineStatus = useOnlineStatus();
+  const { loggedInUser } = useContext(UserContext);
 
-  useEffect(() => {
-    console.log("UseEffect Renderes");
-  }, [login]);
+  const cartItems = useSelector((store) => store.cart.items);
+
+  console.log(cartItems);
 
   return (
     <div className="flex justify-between shadow-lg m-2">
@@ -29,9 +32,12 @@ const Header = () => {
             <Link to="/about">About</Link>
           </li>
           <li className="px-4">
-            <Link to="contact">Contact Us</Link>
+            <Link to="/contact">Contact Us</Link>
           </li>
-          <li className="px-4">Cart</li>
+          <li className="px-4">
+            {" "}
+            <Link to="/cart">Cart ({cartItems.length} items)</Link>
+          </li>
           <button
             className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-4 rounded-full"
             onClick={() => {
@@ -40,6 +46,7 @@ const Header = () => {
           >
             {login ? "login" : "logout"}
           </button>
+          <li className="px-4">{loggedInUser}</li>
         </ul>
       </div>
     </div>

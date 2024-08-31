@@ -13,6 +13,8 @@ const useRestaurantList = () => {
   const fetchData = async () => {
     const data = await fetch(RESTAURANTS);
     const json = await data.json();
+
+    console.log(json);
     const restaurants =
       json?.data?.cards[4]?.card?.card?.gridElements?.infoWithStyle
         ?.restaurants || [];

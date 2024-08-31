@@ -1,4 +1,8 @@
+import { useContext } from "react";
+import UserContext from "../utils/UserContext";
+
 const RestaurantCard = ({ resList }) => {
+  const { loggedInUser } = useContext(UserContext);
   const { name, cuisines, avgRating, costForTwo, cloudinaryImageId } =
     resList.info;
   return (
@@ -19,6 +23,7 @@ const RestaurantCard = ({ resList }) => {
           </h4>
           <h4 className="text-gray-700">{costForTwo}</h4>
         </div>
+        <h4>User {loggedInUser}</h4>
       </div>
     </div>
   );
