@@ -3,10 +3,14 @@ import UserContext from "../utils/UserContext";
 
 const RestaurantCard = ({ resList }) => {
   const { loggedInUser } = useContext(UserContext);
+  console.log(resList);
   const { name, cuisines, avgRating, costForTwo, cloudinaryImageId } =
     resList.info;
   return (
-    <div className="bg-white rounded-lg shadow-md overflow-hidden hover:bg-slate-100">
+    <div
+      data-testid="resCard"
+      className="bg-white rounded-lg shadow-md overflow-hidden hover:bg-slate-100"
+    >
       <img
         className="w-full h-48 object-cover"
         alt="res-logo"
